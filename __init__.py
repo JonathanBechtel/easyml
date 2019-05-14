@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri May  3 20:29:58 2019
+Created on Tue May 14 08:26:32 2019
 
 @author: Jonat
 """
 
-from .utils import get_counts

@@ -6,6 +6,8 @@ Created on Fri May  3 21:28:32 2019
 """
 
 import numpy as np
+import sys
+sys.path.append('..')
 from utils import mse, gini, majority_vote
 
 class TreeNode():
