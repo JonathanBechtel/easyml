@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
 """
-Created on Fri May  3 21:28:32 2019
-
-@author: Jonat
+Handspun implementation of a DecisionTree, with inherited classes to use for Regression and Classification, written in Numpy.
 """
 
 import numpy as np
