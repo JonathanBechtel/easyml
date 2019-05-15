@@ -42,7 +42,7 @@ class LinearRegression():
             rgen = np.random.RandomState()
             # initialize weights, adding an extra for the intercept
             self.w      = rgen.normal(loc=0, scale=0.1, size=X.shape[1] + 1)
-            self.errors = []
+            self.cost_  = []
             
             for i in range(self.n_iter):
                 output      = self.predict(X)      # create prediction
@@ -51,4 +51,4 @@ class LinearRegression():
                 self.w[1:] += gradient * self.eta  # update weights
                 self.w[0]  += errors.sum() * self.eta
                 cost        = np.sum(errors**2) / 2    # calculate cost
-                self.errors.append(cost)
+                self.cost_.append(cost)
