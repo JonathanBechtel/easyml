@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Polynomial Regression
+Polynomial Regression, using standard OLS and Ridge Regression to 
 """
 from utils import polynomialize
 from linear_regression import LinearRegression
