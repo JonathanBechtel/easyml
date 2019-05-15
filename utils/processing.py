@@ -9,20 +9,21 @@ class of helper functions to make core code tidier
 import numpy as np
 
 def standardize(X):
-    return (X - X.mean()) / X.std()
+    for i in range(X.shape[1]):
+        X[:, i] = (X[:, i] - X[:, i].mean()) / X[:, i].std()
+    return X
 
 def polynomialize(X, degree=2):
     
     if degree < 2:
         raise ValueError("degree argument must be 2 or larger")
         
-    if type(degree) is not int:
-        raise TypeError("the degree argument must be an integer")
-        
-    columns = X.columns
-    for column in columns:
-        for exponent in range(2, degree+2):
-            X[column+'^'+exponent] = X[column]**exponent
+    for col in range(X.shape[1]):
+        for exp in range(2, degree+1):
+            col_to_add = X[:, col]**exp
+            col_to_add = col_to_add[:, np.newaxis]
+            X = np.hstack((X, col_to_add))
+    return X
 
 def shuffle_matrix(X, sample_size=1):
         num_rows = int(sample_size * X.shape[0])

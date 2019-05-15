@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri May  3 21:28:32 2019
-
-@author: Jonat
+Handcoded Decision Tree, which is later inherited by child classes to be used for Classification and Regression.
 """
 
 import numpy as np
@@ -24,26 +22,40 @@ class TreeNode():
         self.right_branch  = right_branch
 
 class DecisionTree():
+    """
+    Base Decision Tree Class used for Regression and Classification Trees
     
-    def __init__(self, min_leaf=5, impurity_threshold=1e-5, root=None, leaf_value=None, impurity=None):
+    Takes the following inputs:
+    
+    min_leaf:            minimum number of samples you can have on a leaf in order to create a split
+    impurity_threshold:  minimum amount of information gain required to create a split
+    root:                the split that represents the base of your tree
+    """
+    
+    def __init__(self, min_leaf=5, impurity_threshold=1e-5, root=None):
         
         self.min_leaf              = min_leaf
         self.impurity_threshold    = impurity_threshold
         self.root                  = root
-        self._leaf_calculation     = leaf_value
-        self._impurity_calculation = impurity
         
     def _get_splits(self, X, y, col_idx, value):
-        
+        """
+        Creates indices for left and right splits to be used in building the tree
+        """
         lhs = np.nonzero(X[:, col_idx] <= value)
         rhs = np.nonzero(X[:, col_idx] >  value)
         
         return lhs[0], rhs[0]
     
     def _info_gain(self, X, y, col_idx, value):
+        """
+        Determines amount of info_gain from splitting your dataset with a particular value in a particular column
+        """
+        
         # get left and right splits for given value
         lhs, rhs = self._get_splits(X, y, col_idx, value)
         
+        # no info gain if either split has no samples
         if len(rhs) is 0 or len(lhs) is 0:
             return 0
         
@@ -52,12 +64,15 @@ class DecisionTree():
         left_weight  = len(lhs) / sample_size
         right_weight = len(rhs) / sample_size
          
-        # calculate information gain from this particular split
+        # calculate information gain from this particular split - self._impurity_calculation is determined in subclasses
         info_change = self._impurity_calculation(y, y.mean()) - (left_weight * self._impurity_calculation(y[lhs], y[lhs].mean())) - (right_weight * self._impurity_calculation(y[rhs], y[rhs].mean()))
         
         return info_change
     
     def _find_best_value(self, X, y, col_idx):
+        """
+        For any given column, finds the value that returns the largest amount of information gain
+        """
         # generate unique values
         unique_values = np.unique(X[:, col_idx])
         
@@ -67,6 +82,9 @@ class DecisionTree():
         return best_val
     
     def _find_best_split(self, X, y):
+        """
+        For a feature matrix and target variable, iterates through each column to find the best value to split on
+        """
         # get the best value in the dataset
         best_value = max((self._find_best_value(X, y, i), i) for i in range(X.shape[1]))  
     
@@ -77,7 +95,10 @@ class DecisionTree():
         return info_change, value, col_number
     
     def _is_leaf(self, info_change, split):
-        """Determines if a decision node represents a leaf or not"""
+        """
+        Determines if a decision node represents a leaf or not
+        """
+        
         if info_change <= self.impurity_threshold:
             return True
         if len(split) <= self.min_leaf:
@@ -86,18 +107,21 @@ class DecisionTree():
             return False
     
     def _build_tree(self, X, y):
-
+        """
+        Recursively finds the best split, determines point in tree, and either calculates a leaf value or splits again
+        """
         # get info gain, column value and column number of best split
         info_change, value, col_number = self._find_best_split(X, y)
         
         # generate left and right sides of tree based on best value
         lhs, rhs = self._get_splits(X, y, col_number, value)
         
-        # if both splits are leaves, return them as such
+        # if either split is a leaf, then create a leaf
         if self._is_leaf(info_change, lhs) or self._is_leaf(info_change, rhs):
             return TreeNode(branch_size = len(X),
                             leaf_value  = self._leaf_calculation(y))
         
+        # if not, then keep on splitting
         else:
             return TreeNode(feature       = col_number, 
                             feature_value = value, 
@@ -107,16 +131,25 @@ class DecisionTree():
             
 
     def fit(self, X, y):
+        """
+        Fits the dataset to a decision tree by calling the _build_tree function
+        """
         self.root = self._build_tree(X, y)
         
     def _find_leaf(self, x_i, tree=None):
+        """
+        Takes a sample, recursively travels down a tree until it ends up at a leaf, where its value is calculated
+        """
         
+        # if no tree, start at its root
         if tree is None:
             tree = self.root
             return self._find_leaf(x_i, tree)
             
+       # if on a leaf, then return the leaf value 
         if tree.leaf_value is not None:
             return tree.leaf_value
+        # if not, then determine what branch you want to travel down
         else:
             if x_i[tree.feature[0]] <= tree.feature_value:
                 return self._find_leaf(x_i, tree.left_branch)
@@ -124,6 +157,9 @@ class DecisionTree():
                 return self._find_leaf(x_i, tree.right_branch)
             
     def predict(self, X):
+        """
+        Builds predictions for input matrix by assigning each row to a leaf
+        """
         preds = [self._find_leaf(x_i) for x_i in X]
         return preds
             
@@ -149,7 +185,9 @@ class DecisionTree():
             self.print_tree(tree.right_branch)
             
 class DecisionTreeRegressor(DecisionTree):
-    
+    """
+    Inherits DecisionTree class, sets leaf_calculation and impurity calculation to make it suitable for regression
+    """
     def fit(self, X, y):
         self._leaf_calculation = np.mean
         self._impurity_calculation = mse
@@ -157,7 +195,9 @@ class DecisionTreeRegressor(DecisionTree):
 
     
 class DecisionTreeClassifier(DecisionTree):
-    
+    """
+    Inherits DecisionTree class, sets leaf_calculation and impurity calculation to make it suitable for classification
+    """  
     def fit(self, X, y):
         self._leaf_calculation = majority_vote
         self._impurity_calculation = gini

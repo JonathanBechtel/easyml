@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue May  7 08:21:06 2019
-
-@author: Jonat
+Handcoded Random Forest for Regression and Classification written in Numpy.
+Creates a bases class RandomForest, which is then passed onto RandomForestClassifier and RandomForestRegressor, 
+each to be used for the appropriate use.
 """
 import numpy as np
 from decision_tree import DecisionTreeRegressor, DecisionTreeClassifier
