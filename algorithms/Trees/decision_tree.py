@@ -1,14 +1,8 @@
 """
-<<<<<<< HEAD
-Handcoded Decision Tree, which is later inherited by child classes to be used for Classification and Regression.
-=======
 Handspun implementation of a DecisionTree, with inherited classes to use for Regression and Classification, written in Numpy.
->>>>>>> a11b13987ab09d93d1de9d82fbd2f8baef2dc48d
 """
 
 import numpy as np
-import sys
-sys.path.append('..')
 from utils import mse, gini, majority_vote
 
 class TreeNode():

@@ -2,8 +2,6 @@
 Ridge Regression, coded in Numpy, using either the closed form solution or Gradient Descent
 """
 import numpy as np
-import sys
-sys.path.append('../..')
 from utils import standardize
 
 class RidgeRegression():
@@ -47,8 +45,8 @@ class RidgeRegression():
                 l2_penalty  = self.alpha * np.sum(self.w[1:]**2)
                 output      = self.predict(X)      
                 errors      = y - output           
-                gradient    = X.T @ errors + l2_grad
-                self.w[1:] += gradient * self.eta * (1 / len(X))
+                gradient    = (X.T @ errors * (1/len(X))) + l2_grad
+                self.w[1:] += gradient * self.eta
                 self.w[0]  += errors.sum() * self.eta
                 cost        = (np.sum(errors**2) + l2_penalty) / 2
                 self.cost_.append(cost)

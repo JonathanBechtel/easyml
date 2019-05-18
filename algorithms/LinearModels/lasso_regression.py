@@ -2,6 +2,7 @@
 Lasso Regression Implemented with Coordinate Descent, written in Numpy
 """
 import numpy as np
+from utils import standardize
 
 class LassoRegression():
     """
@@ -9,9 +10,10 @@ class LassoRegression():
     n_iter: number of iterations to use for gradient descent
     alpha:  value of alpha to use for regularization
     """
-    def __init__(self, n_iter=500, alpha=1):
-        self.n_iter = n_iter
-        self.alpha  = alpha
+    def __init__(self, n_iter=500, alpha=1, standardize=True):
+        self.n_iter      = n_iter
+        self.alpha       = alpha
+        self.standardize = standardize
         
     def compute_rho(self, X, y, col_idx):
         """sub derivative of variable"""
@@ -37,6 +39,9 @@ class LassoRegression():
             return rho - alpha
         
     def fit(self, X, y):
+        
+        if self.standardize:
+            X = standardize(X)
         """update weights through coordinate descent"""
         self.coef_  = np.random.normal(loc=0.0, scale=0.1, size=X.shape[1])
         

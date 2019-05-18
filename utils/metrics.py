@@ -5,11 +5,7 @@ Created on Tue May  7 09:56:07 2019
 @author: Jonat
 """
 import numpy as np
-import sys
-sys.path.append('../utils')
-sys.path.append('../../utils')
-
-from processing import get_counts
+from .processing import get_counts
 
 def mse(y, y_hat):
     return np.mean((y - y_hat)**2)
