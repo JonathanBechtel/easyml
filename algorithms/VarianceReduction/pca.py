@@ -2,7 +2,6 @@
 Created on Mon May 20 13:34:54 2019
 
 Handwritten version of Principal Component Analysis, written in Numpy
-
 """
 import numpy as np
 from utils import standardize
@@ -28,9 +27,11 @@ class PCA():
         self.standardize  = standardize
         
     def fit(self, X):
-        """Determine the eigenvalues and eigenvectors of the feature matrix, sorts them according to 
+        """
+        Determine the eigenvalues and eigenvectors of the feature matrix, sorts them according to 
         absolute value of the returned eigenvalues.  Function returns itself to be chained w/ the
-        fit_transform() method"""
+        fit_transform() method
+        """
         
         # if no value for n_components is specified, create one for each column in dataset 
         if self.n_components is None:
@@ -46,11 +47,11 @@ class PCA():
         eigen_vals, eigen_vecs = np.linalg.eig(cov_mat)
         
         # sort the eigen values from high to low
-        self.variance_ratios_       = sorted([ (eigen_vals[i] / np.sum(eigen_vals)) for i in range(self.n_components)], reverse=True)
+        self.variance_ratios_  = sorted([ (eigen_vals[i] / np.sum(eigen_vals)) for i in range(self.n_components)], reverse=True)
         # pair each eigen value with its eigen vector
-        self.eigen_pairs            = [(eigen_vals[i], eigen_vecs[:, i]) for i in range(len(eigen_vals))]
+        self.eigen_pairs       = [(eigen_vals[i], eigen_vecs[:, i]) for i in range(len(eigen_vals))]
         # sort from high to low
-        self.sorted_pairs           = sorted(self.eigen_pairs, reverse=True)
+        self.sorted_pairs      = sorted(self.eigen_pairs, reverse=True)
         
         return self
         
@@ -58,7 +59,6 @@ class PCA():
         """
         Creates new feature matrix from eigen vectors and original feature matrix
         """
-        
         # stack components together in a new numpy array
         components = np.hstack((self.sorted_pairs[i][1][:, np.newaxis] for i in range(self.n_components)))
         # take the dot product with X, to be used for later analysis
@@ -67,5 +67,7 @@ class PCA():
         return X_pca
     
     def fit_transform(self, X):
-        """Chains together fir and transform methods to create new version of X in one function"""
+        """
+        Chains together fir and transform methods to create new version of X in one function
+        """
         return self.fit(X).transform(X)
