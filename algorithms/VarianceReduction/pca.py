@@ -68,6 +68,6 @@ class PCA():
     
     def fit_transform(self, X):
         """
-        Chains together fir and transform methods to create new version of X in one function
+        Chains together fit and transform methods to create new version of X in one function
         """
         return self.fit(X).transform(X)
