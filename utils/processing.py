@@ -38,3 +38,5 @@ def majority_vote(col):
     winner = np.argmax(counts)
     return winner
     
+def sigmoid(X):
+    return 1 / (1 + np.exp(-X))

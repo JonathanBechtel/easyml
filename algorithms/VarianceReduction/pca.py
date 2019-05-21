@@ -28,9 +28,8 @@ class PCA():
         
     def fit(self, X):
         """
-        Determine the eigenvalues and eigenvectors of the feature matrix, sorts them according to 
-        absolute value of the returned eigenvalues.  Function returns itself to be chained w/ the
-        fit_transform() method
+        Determine the eigenvalues and eigenvectors of the feature matrix.
+        Returns itself to be chained w/ the fit_transform() method
         """
         
         # if no value for n_components is specified, create one for each column in dataset 
