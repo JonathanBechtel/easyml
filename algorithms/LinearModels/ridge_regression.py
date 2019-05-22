@@ -35,18 +35,17 @@ class RidgeRegression():
             
         # otherwise, use gradient descent
         else:
-            rgen = np.random.RandomState()
             # initialize weights, adding an extra for the intercept
-            self.w      = rgen.normal(loc=0, scale=0.1, size=X.shape[1] + 1)
+            self.w      = np.random.normal(loc=0, scale=0.1, size=X.shape[1] + 1)
             self.cost_  = []
             
             for i in range(self.n_iter):
-                l2_grad     = self.alpha * self.w[1:]
-                l2_penalty  = self.alpha * np.sum(self.w[1:]**2)
-                output      = self.predict(X)      
-                errors      = y - output           
-                gradient    = (X.T @ errors * (1/len(X))) + l2_grad
-                self.w[1:] += gradient * self.eta
-                self.w[0]  += errors.sum() * self.eta
-                cost        = (np.sum(errors**2) + l2_penalty) / 2
-                self.cost_.append(cost)
+                l2_grad     = self.alpha * self.w[1:]                 # update l2 gradient
+                l2_penalty  = self.alpha * np.sum(self.w[1:]**2)      # update l2 loss term
+                output      = self.predict(X)                         # make prediction - linear output
+                errors      = y - output                              # get error column
+                gradient    = (X.T @ errors + l2_grad) * 1/len(X)     # get error wrt to each column, add l2, scale by 1/m
+                self.w[1:] += gradient * self.eta                     # update the weights by gradients * learning rate
+                self.w[0]  += errors.sum() * self.eta  * 1/len(X)     # update intercept by error column * learning rate * 1/m
+                cost        = (np.sum(errors**2) + l2_penalty) / 2    # compute the cost
+                self.cost_.append(cost)                               # log it

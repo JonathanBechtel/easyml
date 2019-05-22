@@ -42,9 +42,9 @@ class SGDRegressor():
     cost_: list
     Sum of squares cost function, with regularization term averaged over all training samples in each epoch
     """
-    def __init__(self, n_iter=500, eta=.01, w_initialized=False, shuffle=True, alpha=0):
-        self.n_iter        = 500
-        self.eta           = .01
+    def __init__(self, n_iter=2, eta=.000001, w_initialized=False, shuffle=True, alpha=0):
+        self.n_iter        = n_iter
+        self.eta           = eta
         self.w_initialized = w_initialized
         self.shuffle       = shuffle
         self.alpha         = alpha
@@ -90,6 +90,9 @@ class SGDRegressor():
         return X[r], y[r]
     
     def _initialize_weights(self, m):
+        """
+        initialize weights to something close to 0
+        """
         self.w_            = np.random.normal(0, 0.1, size=m+1)
         self.w_initialized = True
         
@@ -97,11 +100,11 @@ class SGDRegressor():
         """
         Apply Gradient Descent to Update Weights of Variables
         """
-        output       = self.activation(self.net_input(xi))
-        error        = target - output
-        self.w_[1:] += self.eta * xi @ error + self.regularization_grad
-        self.w_[0]  += self.eta * error
-        cost         = 0.5 * (error**2 + self.regularization_term)
+        output       = self.activation(self.net_input(xi))                  # linear input function
+        error        = target - output                                      # generate error term
+        self.w_[1:] += self.eta * (xi * error + self.regularization_grad)   # take gradient w.r.t. sample, update by learning rate
+        self.w_[0]  += self.eta * error                                     # update intercept by gradient * learning rate
+        cost         = 0.5 * (error**2 + self.regularization_term)          # compute cost
         return cost
     
     def net_input(self, X):
@@ -144,7 +147,13 @@ class SGDClassifier(SGDRegressor):
     """
     
     def activation(self, X):
+        """Take sigmoid of linear input function"""
         return sigmoid(X)
     
     def predict(self, X):
+        """Return 1 when probability > 0.5, False elsewhere"""
         np.where(self.activation(self.net_input(X)) > 0.50, 1, 0)
+        
+    def predict_proba(self, X):
+        """Return sigmoid of linear input function"""
+        return self._activation(self.net_input(X))

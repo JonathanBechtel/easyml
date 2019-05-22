@@ -69,12 +69,12 @@ class LogisticRidgeRegression(LogisticRegression):
         self.cost_  = []
             
         for i in range(self.n_iter):
-            l2_penalty  = self.alpha * np.sum(self.w[1:]**2)
-            l2_grad     = self.alpha * self.w[1:]
+            l2_penalty  = self.alpha * np.sum(self.w[1:]**2)    # generalte l2 penalty
+            l2_grad     = self.alpha * self.w[1:]               # generate l2 gradient
             guess       = self._sigmoid(self._output(X))        # create prediction
             errors      = y - guess                             # get errors
             gradient    = (X.T @ errors + l2_grad) * 1/len(X)   # get gradient w.r.t. each column
             self.w[1:] += gradient * self.eta                   # update weights
-            self.w[0]  += errors.sum() * self.eta
+            self.w[0]  += errors.sum() * self.eta * 1/len(X)    # update intercept w/ gradient, learning rate, 1/m
             cost        = (np.sum(errors**2) + l2_penalty) / 2  # calculate cost
-            self.cost_.append(cost)
+            self.cost_.append(cost)                             # append it
