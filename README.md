@@ -7,6 +7,6 @@ This repository is meant to be a resource for people who'd like to easily study 
 Most algorithms were verified for accuracy with toy datasets, so there are no guarantees you'd get workable performance on something that was industrial scale.
 
 # Installation
-1).  Go to the repository you'd want to use the program in
-2).  git clone https://github.com/JonathanBechtel/easyml.git
-3).  You'll probably have to play around with some path directories to get things working, but that's a start
+* Go to the repository you'd want to use the program in
+* git clone https://github.com/JonathanBechtel/easyml.git
+* You'll probably have to play around with some path directories to get things working, but that's a start
