@@ -51,6 +51,8 @@ class PCA():
         self.eigen_pairs       = [(eigen_vals[i], eigen_vecs[:, i]) for i in range(len(eigen_vals))]
         # sort from high to low
         self.sorted_pairs      = sorted(self.eigen_pairs, reverse=True)
+        # stack components in appropriate order
+        self.components        = np.hstack((self.sorted_pairs[i][1][:, np.newaxis] for i in range(self.n_components)))
         
         return self
         
@@ -58,10 +60,8 @@ class PCA():
         """
         Creates new feature matrix from eigen vectors and original feature matrix
         """
-        # stack components together in a new numpy array
-        components = np.hstack((self.sorted_pairs[i][1][:, np.newaxis] for i in range(self.n_components)))
         # take the dot product with X, to be used for later analysis
-        X_pca      = X @ components
+        X_pca      = X @ self.components
         
         return X_pca
     

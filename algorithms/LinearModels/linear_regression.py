@@ -45,10 +45,10 @@ class LinearRegression():
             self.cost_  = []
             
             for i in range(self.n_iter):
-                output      = self.predict(X)         # create prediction
-                errors      = y - output              # get errors
-                gradient    = X.T @ errors * 1/len(X) # get gradient w.r.t. each column
-                self.w[1:] += gradient * self.eta     # update weights
-                self.w[0]  += errors.sum() * self.eta
-                cost        = np.sum(errors**2) / 2   # calculate cost
+                output      = self.predict(X)           # create prediction
+                errors      = y - output                # get errors
+                gradient    = X.T @ errors * 1/len(X)   # get gradient w.r.t. each column, scale by # of samples
+                self.w[1:] += gradient * self.eta       # update weights
+                self.w[0]  += errors.sum() * self.eta * 1/len(X)
+                cost        = np.sum(errors**2) / 2     # calculate cost
                 self.cost_.append(cost)
