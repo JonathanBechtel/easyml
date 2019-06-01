@@ -8,9 +8,10 @@ class of helper functions to make core code tidier
 import numpy as np
 
 def standardize(X):
+    X_std = np.zeros(X.shape)
     for i in range(X.shape[1]):
-        X[:, i] = (X[:, i] - X[:, i].mean()) / X[:, i].std()
-    return X
+        X_std[:, i] = (X[:, i] - X[:, i].mean()) / X[:, i].std()
+    return X_std
 
 def polynomialize(X, degree=2):
     
