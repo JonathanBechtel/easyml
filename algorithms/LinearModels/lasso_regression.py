@@ -73,10 +73,10 @@ class LassoRegression():
             # for every column except intercept
             for col in range(1, len(self.coef_)):
                 # take its subdifferential
-                rho  = self.compute_rho(X_fit, y, col)
+                rho  = self._compute_rho(X_fit, y, col)
                 # calculate zeta
-                zeta = self.compute_zeta(X_fit, col)
+                zeta = self._compute_zeta(X_fit, col)
                 # update weight depending on value of subdifferential and alpha
-                self.coef_[col] = zeta * self.soft_threshold(rho, self.alpha)
+                self.coef_[col] = zeta * self._soft_threshold(rho, self.alpha)
         # after you've updated all weights, set the intercept -- should be y.mean() if data is centered        
         self.coef_[0] = y.mean() - X_fit[:, 1:].mean(0) @ self.coef_[1:].T
