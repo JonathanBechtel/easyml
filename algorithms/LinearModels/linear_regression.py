@@ -1,15 +1,31 @@
-# -*- coding: utf-8 -*-
 """
-Created on Sun Mar 31 10:03:30 2019
-
-@author: Jonat
-
-Creates different versions of Linear Regression.
+Linear Regression, implemented in Numpy, using both the analytical and gradient descent based solutions
 """
 import numpy as np
 from utils import standardize
 
 class LinearRegression():
+    """
+    Class that implements Linear Regression.
+    Inputs:
+        
+    n_iter:    integer
+    -----------------------
+    Number of iterations to use in gradient descent
+    
+    eta:       float
+    -----------------------
+    Size of the learning rate.  Typically will be between 0.1 and .001
+    
+    centered:  bool
+    -----------------------
+    If True, automatically centers the data
+    
+    gd:        bool
+    -----------------------
+    Determines whether or not you use gradient descent.  If True, gradient descent 
+    will be used to solve.  If not, closed form will be used (if possible).
+    """
     
     def __init__(self, n_iter=500, eta=.001, centered=True, gd=True):
         self.n_iter   = n_iter
