@@ -2,7 +2,8 @@
 Lasso Regression Implemented with Coordinate Descent, written in Numpy
 """
 import numpy as np
-from utils import standardize
+from LinearModels import RidgeRegression
+from easyml.utils import standardize
 
 class LassoRegression():
     """

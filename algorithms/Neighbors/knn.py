@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Handwritten version of K-Nearest Neighbors, written in Numpy
 """
