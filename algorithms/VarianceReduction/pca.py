@@ -31,7 +31,7 @@ class PCA():
     2D array consisting of the eigenvectors used to transform dataset.  # of rows corresponds to # of samples
     in dataset.  # of columns corresponds to # of components specified at initialization.
     """
-    def __init__(self, n_components=None, centered=True):
+    def __init__(self, n_components=None, centered=False):
         """Initialize the PCA algorithm"""
         self.n_components = n_components
         self.centered     = centered
@@ -55,14 +55,14 @@ class PCA():
         cov_mat                = np.cov(X.T)
         eigen_vals, eigen_vecs = np.linalg.eig(cov_mat)
         
-        # sort the eigen values from high to low
-        self.variance_ratios_  = sorted([ (eigen_vals[i] / np.sum(eigen_vals)) for i in range(self.n_components)], reverse=True)
         # pair each eigen value with its eigen vector
         eigen_pairs = [(eigen_vals[i], eigen_vecs[:, i]) for i in range(len(eigen_vals))]
         # sort from high to low
         sorted_pairs = sorted(eigen_pairs, reverse=True)
         # stack components in appropriate order
         self.components_ = np.hstack((sorted_pairs[i][1][:, np.newaxis] for i in range(self.n_components)))
+        
+        self.variance_ratios_ = [np.abs(pair[0].real)/np.sum(eigen_vals.real) for pair in sorted_pairs[:self.n_components]]
         
         return self
         
