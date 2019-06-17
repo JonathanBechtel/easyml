@@ -112,16 +112,15 @@ class LDA():
         
         # get eigen values and eigen vectors to be used for data transformation
         eigen_vals, eigen_vecs = np.linalg.eig(inv_Sw @ S_b)
-        eigen_vals = eigen_vals.real
         
-        # sort the eigen values from high to low
-        self.variance_ratios_ = sorted([ eigen_vals[i] / np.sum(eigen_vals) for i in range(self.n_discriminants)], reverse=True)
         # pair each eigen value with its eigen vector
         eigen_pairs           = [(eigen_vals[i], eigen_vecs[:, i]) for i in range(len(eigen_vals))]
         # sort from high to low
-        sorted_pairs          = sorted(eigen_pairs, reverse=True)
+        sorted_pairs          = sorted(eigen_pairs, key=lambda x: x[0], reverse=True)
         # stack discriminants in appropriate order
-        self.discriminants_   = np.hstack((sorted_pairs[i][1][:, np.newaxis] for i in range(self.n_discriminants)))
+        self.discriminants_   = np.hstack((sorted_pairs[i][1][:, np.newaxis].real for i in range(self.n_discriminants)))
+        # calculated total explained variance for included discriminants
+        self.variance_ratios_ = [np.abs(pair[0].real)/np.sum(eigen_vals.real) for pair in sorted_pairs[:self.n_discriminants]]
         
         return self
         
